@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <lombok.version>1.18.22</lombok.version>
+        <lombok.version>1.18.26</lombok.version>
     </properties>
 
     <dependencies>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.3.3</version>
+            <version>42.5.4</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -37,15 +37,33 @@
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.8.2</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.1.210</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -60,7 +78,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.1.2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -92,7 +110,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.7</version>
+                <version>0.8.8</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -101,13 +119,41 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>generate-jacoco-report</id>
+                        <id>generate-jacoco-report-ut</id>
                         <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                    </execution>
+                    <execution>
+                        <id>generate-jacoco-report-it</id>
+                        <goals>
+<!--                            <goal>report</goal>-->
                             <goal>report</goal>
                         </goals>
                         <phase>verify</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/dmdev/validator/Error.class</exclude>
+                        <exclude>com/dmdev/validator/ValidationResult.class</exclude>
+                        <exclude>com/dmdev/exception/ValidationException.class</exclude>
+                        <exclude>com/dmdev/exception/SubscriptionException.class</exclude>
+                        <exclude>com/dmdev/entity/Subscription.class</exclude>
+                        <exclude>com/dmdev/dto/CreateSubscriptionDto.class</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>4.0.0-M8</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.4.5</version>
             </plugin>
         </plugins>
     </build>
