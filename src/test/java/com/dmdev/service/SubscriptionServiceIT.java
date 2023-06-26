@@ -76,16 +76,6 @@ public class SubscriptionServiceIT extends IntegrationTestBase {
     }
 
     @Test
-    void expireShouldThrowExceptionIfStatusIsExpired() {
-        var subscriptionDto = getSubscriptionDto();
-        var subscription = subscriptionService.upsert(subscriptionDto);
-        subscription.setStatus(Status.EXPIRED);
-        subscriptionDao.update(subscription);
-
-        assertThrows(SubscriptionException.class, () -> subscriptionService.expire(subscription.getId()));
-    }
-
-    @Test
     void expire() {
         var subscriptionDto = getSubscriptionDto();
         var subscription = subscriptionService.upsert(subscriptionDto);
@@ -96,6 +86,17 @@ public class SubscriptionServiceIT extends IntegrationTestBase {
         assertThat(actualResult.get().getStatus()).isEqualTo(Status.EXPIRED);
         assertThat(actualResult.get().getExpirationDate()).isBefore(Instant.now(clock));
     }
+
+    @Test
+    void expireShouldThrowExceptionIfStatusIsExpired() {
+        var subscriptionDto = getSubscriptionDto();
+        var subscription = subscriptionService.upsert(subscriptionDto);
+        subscription.setStatus(Status.EXPIRED);
+        subscriptionDao.update(subscription);
+
+        assertThrows(SubscriptionException.class, () -> subscriptionService.expire(subscription.getId()));
+    }
+
 
     private CreateSubscriptionDto getSubscriptionDto() {
         var now = ZonedDateTime.now(clock);
